@@ -226,5 +226,5 @@ for u in CustomUser.objects.all():
 
 ## Autores
 
-- **Pedro de Oliveira Pinto** — autenticação de usuários e modelagem de dados
-- **Erik Barbosa de Castro** — modelagem HTML e rotas
+- Pedro de Oliveira Pinto
+- Erik Barbosa de Castro
