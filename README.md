@@ -224,6 +224,5 @@ for u in CustomUser.objects.all():
 ---
 
 ## Autores
-
-- Pedro de Oliveira Pinto
 - Erik Barbosa de Castro
+- Pedro de Oliveira Pinto
