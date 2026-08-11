@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2>Encontrar Mentores</h2>
+        <form method="get" class="row g-3">
+            <div class="col-md-6">
+                <input type="text" name="q" class="form-control" placeholder="Buscar por nome ou bio" value="{{ request.GET.q }}">
+            </div>
+            <div class="col-md-4">
+                <select name="disciplina" class="form-select">
+                    <option value="">Todas as Disciplinas</option>
+                    {% for disciplina in disciplinas %}
+                        <option value="{{ disciplina.id }}" {% if request.GET.disciplina|add:"0" == disciplina.id %}selected{% endif %}>
+                            {{ disciplina.nome }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    {% for mentor in mentores %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ mentor.user.get_full_name|default:mentor.user.username }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    {% for disc in mentor.disciplinas.all %}
+                        <span class="badge bg-secondary">{{ disc.nome }}</span>
+                    {% endfor %}
+                </h6>
+                <p class="card-text">{{ mentor.bio|truncatewords:30 }}</p>
+            </div>
+            <div class="card-footer bg-white border-top-0">
+                <a href="{% url 'mentor_detail' mentor.pk %}" class="btn btn-outline-primary w-100">Ver Detalhes e Agendar</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <p class="text-center text-muted">Nenhum mentor encontrado com os critérios selecionados.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

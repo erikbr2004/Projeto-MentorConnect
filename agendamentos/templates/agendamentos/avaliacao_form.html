@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Avaliar Mentoria</div>
+            <div class="card-body">
+                <p class="text-muted">Como foi sua mentoria com <strong>{{ sessao.mentor.user.get_full_name }}</strong> em {{ sessao.data_inicio|date:"d/m/Y" }}?</p>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-success w-100">Enviar Avaliação</button>
+                    <a href="{% url 'historico_sessoes' %}" class="btn btn-link text-center w-100 mt-2">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

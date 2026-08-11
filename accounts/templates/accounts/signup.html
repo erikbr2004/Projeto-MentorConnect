@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <h2>Cadastre-se como:</h2>
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h3>Aluno</h3>
+                <p>Encontre mentores e melhore suas notas.</p>
+                <a href="{% url 'aluno_signup' %}" class="btn btn-primary">Sou Aluno</a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h3>Mentor</h3>
+                <p>Compartilhe conhecimento e ajude outros alunos.</p>
+                <a href="{% url 'mentor_signup' %}" class="btn btn-success">Sou Mentor</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

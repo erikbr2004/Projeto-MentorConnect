@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if object %}Editar{% else %}Adicionar{% endif %} Horário{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                {% if object %}Editar Horário{% else %}Adicionar Novo Horário{% endif %}
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="id_dia_semana" class="form-label">Dia da Semana *</label>
+                        <select name="dia_semana" class="form-select" id="id_dia_semana" required>
+                            {% for value, label in form.fields.dia_semana.choices %}
+                            <option value="{{ value }}" {% if form.dia_semana.value|stringformat:"s" == value|stringformat:"s" %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        {% if form.dia_semana.errors %}
+                        <div class="text-danger small">{{ form.dia_semana.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="id_hora_inicio" class="form-label">Hora de Início *</label>
+                            {{ form.hora_inicio }}
+                            {% if form.hora_inicio.errors %}
+                            <div class="text-danger small">{{ form.hora_inicio.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="id_hora_fim" class="form-label">Hora de Término *</label>
+                            {{ form.hora_fim }}
+                            {% if form.hora_fim.errors %}
+                            <div class="text-danger small">{{ form.hora_fim.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">
+                            {% if object %}Salvar Alterações{% else %}Adicionar{% endif %}
+                        </button>
+                        <a href="{% url 'disponibilidade_list' %}" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

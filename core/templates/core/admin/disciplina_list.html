@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Gerenciar Disciplinas{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Admin</a></li>
+                <li class="breadcrumb-item active">Disciplinas</li>
+            </ol>
+        </nav>
+        <h2>Disciplinas</h2>
+    </div>
+    <div class="col-auto">
+        <a href="{% url 'admin_disciplina_create' %}" class="btn btn-primary">
+            + Nova Disciplina
+        </a>
+    </div>
+</div>
+
+<!-- Busca -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-10">
+                <input type="text" name="q" class="form-control" 
+                       placeholder="Buscar por nome ou código..." 
+                       value="{{ q }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-outline-primary w-100">Buscar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Lista -->
+<div class="card">
+    <div class="card-body p-0">
+        {% if disciplinas %}
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Código</th>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th width="150">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for disciplina in disciplinas %}
+                <tr>
+                    <td><code>{{ disciplina.codigo|default:"-" }}</code></td>
+                    <td><strong>{{ disciplina.nome }}</strong></td>
+                    <td>{{ disciplina.descricao|truncatewords:10|default:"-" }}</td>
+                    <td>
+                        <a href="{% url 'admin_disciplina_update' disciplina.pk %}" 
+                           class="btn btn-sm btn-outline-secondary" title="Editar">
+                            Editar
+                        </a>
+                        <a href="{% url 'admin_disciplina_delete' disciplina.pk %}" 
+                           class="btn btn-sm btn-outline-danger" title="Excluir">
+                            Excluir
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="text-center py-5">
+            <p class="text-muted mb-3">Nenhuma disciplina encontrada.</p>
+            <a href="{% url 'admin_disciplina_create' %}" class="btn btn-primary">
+                Criar primeira disciplina
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Paginação -->
+{% if page_obj.has_other_pages %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}">Anterior</a>
+        </li>
+        {% endif %}
+        
+        <li class="page-item disabled">
+            <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        </li>
+        
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}">Próxima</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}
+

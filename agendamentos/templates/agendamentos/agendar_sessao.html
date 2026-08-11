@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                Agendar Mentoria com {{ disponibilidade.mentor.user.get_full_name }}
+            </div>
+            <div class="card-body">
+                <p>
+                    <strong>Horário Previsto:</strong> {{ disponibilidade.get_dia_semana_display }} 
+                    das {{ disponibilidade.hora_inicio }} às {{ disponibilidade.hora_fim }}
+                </p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Selecione a Data:</label>
+                        {{ form.data }}
+                        {% if form.data.errors %}
+                            <div class="text-danger">{{ form.data.errors }}</div>
+                        {% endif %}
+                        <div class="form-text">Certifique-se de escolher uma data que seja {{ disponibilidade.get_dia_semana_display }}.</div>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Confirmar Solicitação</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

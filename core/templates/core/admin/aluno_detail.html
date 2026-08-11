@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhes do Aluno{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Admin</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'admin_aluno_list' %}">Alunos</a></li>
+                <li class="breadcrumb-item active">{{ aluno.user.get_full_name|default:aluno.user.username }}</li>
+            </ol>
+        </nav>
+        <h2>Detalhes do Aluno</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">Informações Pessoais</div>
+            <div class="card-body">
+                <table class="table table-borderless mb-0">
+                    <tr>
+                        <th width="200">Nome Completo:</th>
+                        <td>{{ aluno.user.get_full_name|default:"-" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Username:</th>
+                        <td><code>{{ aluno.user.username }}</code></td>
+                    </tr>
+                    <tr>
+                        <th>E-mail:</th>
+                        <td>{{ aluno.user.email|default:"-" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Membro desde:</th>
+                        <td>{{ aluno.user.date_joined|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Último acesso:</th>
+                        <td>{{ aluno.user.last_login|date:"d/m/Y H:i"|default:"Nunca" }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Informações Acadêmicas</div>
+            <div class="card-body">
+                <table class="table table-borderless mb-0">
+                    <tr>
+                        <th width="200">Matrícula:</th>
+                        <td><code>{{ aluno.matricula }}</code></td>
+                    </tr>
+                    <tr>
+                        <th>Curso:</th>
+                        <td>{{ aluno.curso.nome|default:"-" }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card bg-light">
+            <div class="card-body text-center">
+                <h5 class="card-title">Estatísticas</h5>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <h3 class="mb-0">{{ total_sessoes }}</h3>
+                        <small class="text-muted">Total de Sessões</small>
+                    </div>
+                    <div class="col-6">
+                        <h3 class="mb-0 text-success">{{ sessoes_concluidas }}</h3>
+                        <small class="text-muted">Concluídas</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <a href="{% url 'admin_aluno_list' %}" class="btn btn-outline-secondary w-100">
+                &larr; Voltar para Lista
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

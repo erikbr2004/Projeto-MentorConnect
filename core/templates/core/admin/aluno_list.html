@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Gerenciar Alunos{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'admin_dashboard' %}">Admin</a></li>
+                <li class="breadcrumb-item active">Alunos</li>
+            </ol>
+        </nav>
+        <h2>Alunos Cadastrados</h2>
+    </div>
+</div>
+
+<!-- Busca -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-10">
+                <input type="text" name="q" class="form-control" 
+                       placeholder="Buscar por nome, username ou matrícula..." 
+                       value="{{ q }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-outline-primary w-100">Buscar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Lista -->
+<div class="card">
+    <div class="card-body p-0">
+        {% if alunos %}
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Nome</th>
+                    <th>Username</th>
+                    <th>Matrícula</th>
+                    <th>Curso</th>
+                    <th width="100">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for aluno in alunos %}
+                <tr>
+                    <td><strong>{{ aluno.user.get_full_name|default:aluno.user.username }}</strong></td>
+                    <td><code>{{ aluno.user.username }}</code></td>
+                    <td>{{ aluno.matricula }}</td>
+                    <td>{{ aluno.curso.nome|default:"-" }}</td>
+                    <td>
+                        <a href="{% url 'admin_aluno_detail' aluno.pk %}" 
+                           class="btn btn-sm btn-outline-primary">Ver</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="text-center py-5">
+            <p class="text-muted">Nenhum aluno encontrado.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Paginação -->
+{% if page_obj.has_other_pages %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}">Anterior</a>
+        </li>
+        {% endif %}
+        <li class="page-item disabled">
+            <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        </li>
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}">Próxima</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}
+

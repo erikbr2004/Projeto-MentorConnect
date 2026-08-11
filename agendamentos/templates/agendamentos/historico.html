@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Histórico de Mentorias</h2>
+            {% if user.role == 'ADMIN' %}
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-primary">&larr; Voltar ao Admin</a>
+            {% else %}
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-primary">&larr; Voltar ao Dashboard</a>
+            {% endif %}
+        </div>
+        
+        <!-- Busca -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-10">
+                        <input type="text" name="q" class="form-control" 
+                               placeholder="Buscar por nome do mentor/aluno ou disciplina..." 
+                               value="{{ q }}">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-outline-primary w-100">Buscar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        {% if sessoes %}
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Data</th>
+                                    {% if user.role == 'ADMIN' %}
+                                        <th>Mentor</th>
+                                        <th>Aluno</th>
+                                    {% elif user.is_mentor %}
+                                        <th>Aluno</th>
+                                    {% else %}
+                                        <th>Mentor</th>
+                                    {% endif %}
+                                    <th>Status</th>
+                                    <th>Avaliação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sessao in sessoes %}
+                                <tr>
+                                    <td>{{ sessao.data_inicio|date:"d/m/Y H:i" }}</td>
+                                    {% if user.role == 'ADMIN' %}
+                                        <td>
+                                            <a href="{% url 'admin_mentor_detail' sessao.mentor.pk %}">
+                                                {{ sessao.mentor.user.get_full_name|default:sessao.mentor.user.username }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'admin_aluno_detail' sessao.aluno.pk %}">
+                                                {{ sessao.aluno.user.get_full_name|default:sessao.aluno.user.username }}
+                                            </a>
+                                        </td>
+                                    {% elif user.is_mentor %}
+                                        <td>{{ sessao.aluno.user.get_full_name|default:sessao.aluno.user.username }}</td>
+                                    {% else %}
+                                        <td>{{ sessao.mentor.user.get_full_name|default:sessao.mentor.user.username }}</td>
+                                    {% endif %}
+                                    <td>
+                                        {% if sessao.status == 'CONCLUIDA' %}
+                                            <span class="badge bg-success">Concluída</span>
+                                        {% elif sessao.status == 'CANCELADA' %}
+                                            <span class="badge bg-danger">Cancelada</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ sessao.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if sessao.status == 'CONCLUIDA' %}
+                                            {% if sessao.avaliacao_rel %}
+                                                <span class="text-warning">
+                                                    {% with ''|center:sessao.avaliacao_rel.nota as range %}
+                                                    {% for _ in range %}★{% endfor %}
+                                                    {% endwith %}
+                                                </span>
+                                                <small class="d-block text-muted">{{ sessao.avaliacao_rel.comentario|truncatewords:5 }}</small>
+                                            {% else %}
+                                                {% if user.is_aluno %}
+                                                    <a href="{% url 'avaliar_sessao' sessao.pk %}" class="btn btn-sm btn-primary">Avaliar</a>
+                                                {% else %}
+                                                    <span class="text-muted">Aguardando avaliação</span>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Paginação -->
+            {% if is_paginated %}
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}">Anterior</a>
+                        </li>
+                    {% endif %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}">Próximo</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+            
+        {% else %}
+            <div class="alert alert-info">
+                {% if q %}
+                    Nenhuma mentoria encontrada para "{{ q }}".
+                {% else %}
+                    Nenhuma mentoria encontrada no histórico.
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

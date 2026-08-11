@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Painel Administrativo{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2><i class="bi bi-gear"></i> Painel Administrativo</h2>
+        <p class="text-muted">Gerencie os dados do sistema</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Disciplinas</h5>
+                <p class="card-text display-4">{{ total_disciplinas }}</p>
+                <a href="{% url 'admin_disciplina_list' %}" class="btn btn-light btn-sm">Gerenciar</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Mentores</h5>
+                <p class="card-text display-4">{{ total_mentores }}</p>
+                <a href="{% url 'admin_mentor_list' %}" class="btn btn-light btn-sm">Ver Todos</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-bg-warning">
+            <div class="card-body">
+                <h5 class="card-title">Alunos</h5>
+                <p class="card-text display-4">{{ total_alunos }}</p>
+                <a href="{% url 'admin_aluno_list' %}" class="btn btn-light btn-sm">Ver Todos</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-bg-info">
+            <div class="card-body">
+                <h5 class="card-title">Sessões</h5>
+                <p class="card-text display-4">{{ total_sessoes }}</p>
+                <a href="{% url 'historico_sessoes' %}" class="btn btn-light btn-sm">Ver Histórico</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Ações Rápidas</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <a href="{% url 'admin_disciplina_create' %}" class="list-group-item list-group-item-action">
+                        <strong>+ Nova Disciplina</strong>
+                        <br><small class="text-muted">Adicionar disciplina ao sistema</small>
+                    </a>
+                    <a href="{% url 'admin_disciplina_list' %}" class="list-group-item list-group-item-action">
+                        <strong>Gerenciar Disciplinas</strong>
+                        <br><small class="text-muted">Editar, buscar e remover disciplinas</small>
+                    </a>
+                    <a href="{% url 'admin_mentor_list' %}" class="list-group-item list-group-item-action">
+                        <strong>Listar Mentores</strong>
+                        <br><small class="text-muted">Ver mentores cadastrados e seus perfis</small>
+                    </a>
+                    <a href="{% url 'admin_aluno_list' %}" class="list-group-item list-group-item-action">
+                        <strong>Listar Alunos</strong>
+                        <br><small class="text-muted">Ver alunos cadastrados e seus perfis</small>
+                    </a>
+                    <a href="{% url 'historico_sessoes' %}" class="list-group-item list-group-item-action">
+                        <strong>Histórico de Sessões</strong>
+                        <br><small class="text-muted">Ver todas as sessões do sistema</small>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

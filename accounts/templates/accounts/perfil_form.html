@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Perfil{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>Editar Perfil</h2>
+        <p class="text-muted">Atualize suas informações de {{ user_type }}</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="id_first_name" class="form-label">Nome *</label>
+                            <input type="text" name="first_name" class="form-control" id="id_first_name" 
+                                   value="{{ form.first_name.value|default:'' }}" required>
+                            {% if form.first_name.errors %}
+                            <div class="text-danger small">{{ form.first_name.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="id_last_name" class="form-label">Sobrenome *</label>
+                            <input type="text" name="last_name" class="form-control" id="id_last_name" 
+                                   value="{{ form.last_name.value|default:'' }}" required>
+                            {% if form.last_name.errors %}
+                            <div class="text-danger small">{{ form.last_name.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_email" class="form-label">E-mail</label>
+                        <input type="email" name="email" class="form-control" id="id_email" 
+                               value="{{ form.email.value|default:'' }}">
+                        {% if form.email.errors %}
+                        <div class="text-danger small">{{ form.email.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    {% if user_type == 'Mentor' %}
+                        <div class="mb-3">
+                            <label for="id_bio" class="form-label">Biografia</label>
+                            {{ form.bio }}
+                            <small class="text-muted">Fale um pouco sobre você e sua experiência</small>
+                            {% if form.bio.errors %}
+                            <div class="text-danger small">{{ form.bio.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Disciplinas que você pode mentorar *</label>
+                            <div class="row">
+                                {% for checkbox in form.disciplinas %}
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        {{ checkbox.tag }}
+                                        <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                            {{ checkbox.choice_label }}
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% if form.disciplinas.errors %}
+                            <div class="text-danger small">{{ form.disciplinas.errors }}</div>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="mb-3">
+                            <label for="id_matricula" class="form-label">Matrícula</label>
+                            {{ form.matricula }}
+                            {% if form.matricula.errors %}
+                            <div class="text-danger small">{{ form.matricula.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="id_curso" class="form-label">Curso</label>
+                            {{ form.curso }}
+                            {% if form.curso.errors %}
+                            <div class="text-danger small">{{ form.curso.errors }}</div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    
+                    <hr>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">Informações da Conta</div>
+            <div class="card-body">
+                <p><strong>Usuário:</strong> {{ user.username }}</p>
+                <p><strong>Tipo:</strong> {{ user_type }}</p>
+                <p><strong>Membro desde:</strong> {{ user.date_joined|date:"d/m/Y" }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
